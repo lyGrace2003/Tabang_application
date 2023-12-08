@@ -28,13 +28,14 @@ class LoginPage extends StatelessWidget {
       ),
       child: Column(
         children:[
-          // IconButton(onPressed: () {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(builder: (context) => const Login()),
-          //       );
-          //   }, icon: SvgPicture.asset("white_left_arrow.svg")),
-          const SizedBox(height: 170,),
+          const SizedBox(height: 20,),
+          Row(children:[
+            IconButton(onPressed: () {
+                Navigator.pop(context);
+              }, icon: SvgPicture.asset("assets/white_left_arrow.svg")),
+            ],
+          ),
+          const SizedBox(height: 140,),
           Row(
             children: [
               const SizedBox(width: 55,),
