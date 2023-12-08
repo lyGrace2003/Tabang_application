@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/User%20Interface/search_page.dart';
 import 'package:tabang_application/app_style.dart';
+import 'package:tabang_application/size_config.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key?key}):super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       child: ListView(
         padding: const EdgeInsets.symmetric(
@@ -17,7 +19,7 @@ class HomeScreen extends StatelessWidget {
           Column(
             children: [
               Container(
-                width: 900,
+                width: SizeConfig.screenWidth,
                 height: 100, 
                 decoration: const BoxDecoration(color: mOrange),
                 child: Column(
