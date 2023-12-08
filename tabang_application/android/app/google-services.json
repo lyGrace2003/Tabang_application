@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "725520897345",
+    "project_id": "tabang-ad643",
+    "storage_bucket": "tabang-ad643.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725520897345:android:37cd1a8ef3cd0b05d3bdc0",
+        "android_client_info": {
+          "package_name": "com.tabang.tabang_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBKzNhl6cnxJcKfrlxkGYL6P4ad3vRu1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
