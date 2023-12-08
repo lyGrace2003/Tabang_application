@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tabang_application/app_style.dart';
-import 'package:tabang_application/login/signup/login_page.dart';
+import 'package:tabang_application/login/login_page.dart';
 import 'package:tabang_application/login/signup/signup_page.dart';
 import 'package:tabang_application/size_config.dart';
 class Login extends StatelessWidget {
@@ -45,11 +45,10 @@ class Login extends StatelessWidget {
           OutlinedButton(
             style: buttonOutlinedWhite,
             onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SignupPage(),
-                ),
-              );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SignupPage()),
+            );
           }, child:Text('Sign up', style: mBold.copyWith(
             color: mWhite, fontSize:SizeConfig.blocksHorizontal!*5),
           ))

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/User%20Interface/screens.dart';
 import 'package:tabang_application/app_style.dart';
-import 'package:tabang_application/login/signup/login.dart';
 import 'package:tabang_application/size_config.dart';
+import 'package:tabang_application/login/login.dart';
+import 'package:flutter_svg/svg.dart';
+
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key?key}):super(key: key);
