@@ -8,7 +8,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Container(
+      child: ListView(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
         ),
@@ -63,6 +64,7 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ],
+    ),
     );
   }
 }
