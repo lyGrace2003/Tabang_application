@@ -1,3 +1,0 @@
-
-
-//place all widgets here

@@ -37,25 +37,25 @@ class _ScreensState extends State<Screens> {
           backgroundColor: mWhite,
           items:<BottomNavigationBarItem>[
             BottomNavigationBarItem(
-            icon: _index  == 1
+            icon: _index  == 0
                   ? SvgPicture.asset('assets/home_selected.svg')
                   : SvgPicture.asset('assets/home_unselected.svg'),
               label: '',
             ),
             BottomNavigationBarItem(
-            icon: _index  == 2
+            icon: _index  == 1
                   ? SvgPicture.asset('assets/bookings_selected.svg')
                   : SvgPicture.asset('assets/bookings_unselected.svg'),
               label: '',
             ),
             BottomNavigationBarItem(
-            icon: _index  == 3
+            icon: _index  == 2
                   ? SvgPicture.asset('assets/favorite_selected.svg')
                   : SvgPicture.asset('assets/favorite_unselected.svg'),
               label: '',
             ),
             BottomNavigationBarItem(
-            icon: _index  == 4
+            icon: _index  == 3
                   ? SvgPicture.asset('assets/user_selected.svg')
                   : SvgPicture.asset('assets/user_unselected.svg'),
               label: '',
