@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/app_style.dart';
-import 'package:tabang_application/login/login.dart';
 import 'package:tabang_application/login/role_management.dart';
 import 'package:tabang_application/size_config.dart';
 
@@ -37,11 +36,13 @@ class _RegisterClientState extends State<RegisterClient> {
  Future register()async{
  if(_formkey.currentState!.validate()){
    if (confirmPass()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      try{await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(), 
         password: _passwordController.text.trim()
-        ).then((value) => {postDetailsToFirestore(context)})
-          .catchError((e) {});
+        ).then((value) => {postDetailsToFirestore(context)});
+      } catch(e){
+        print(e);
+      }
     }
   }
 }
