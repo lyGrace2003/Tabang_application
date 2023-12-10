@@ -1,13 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/User%20Interface/screens.dart';
+import 'package:tabang_application/app_style.dart';
 import 'package:tabang_application/login/login.dart';
 import 'package:tabang_application/login/verify_email.dart';
 import 'package:tabang_application/provider%20interface/screens_provider.dart';
+import 'package:tabang_application/size_config.dart';
 
 class RoleManagement extends StatelessWidget {
   const RoleManagement({super.key});
+  
 
   @override
   Widget build(BuildContext context){
@@ -18,8 +22,12 @@ class RoleManagement extends StatelessWidget {
             if(snapshot.data?['role'] == 'Client'){
               return const Screens();
             }
-            else if(snapshot.data?['role'] == 'Service provider'){
-             return const ScreensProvider();
+            else if(snapshot.data?['role'] == 'Service Provider'){
+              if(snapshot.data?['verified'] == '0'){
+                return const CheckEligibility();
+              }else if(snapshot.data?['verified']=='1'){
+                return const ScreensProvider();
+              }
             }
             return Container();
           }
@@ -52,4 +60,39 @@ class _SendEmailVerificationState extends State<SendEmailVerification> {
     );
   }
 }
+
+class CheckEligibility extends StatelessWidget { 
+  const CheckEligibility({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    body: Container(
+        padding: const EdgeInsets.all(20),
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenHeight,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors:[Color.fromARGB(255, 255, 106, 0),mOrange,mBrightOrange,mYellow],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,),),
+        child: Column(
+          children:[
+            Row(children:[
+              IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+                }, icon: SvgPicture.asset("assets/white_left_arrow.svg")),
+              ],
+            ),
+          SizedBox(height: SizeConfig.screenHeight!*0.3,),
+          Text("Registration in process", style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*10)),
+          Text("We will notify you once verification is complete ", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5)),
+          ],
+        ),
+      ),
+  );
+  }
+}
+
+
 

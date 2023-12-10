@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isVisible = false;
   bool isObscure = true;
-
+  List<String> array=[];
 
     Future login() async{
       if (_formkey.currentState!.validate()) {
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SendEmailVerification()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>  SendEmailVerification()));
       }
       on FirebaseAuthException catch (e){
       if (e.code == 'user-not-found') {

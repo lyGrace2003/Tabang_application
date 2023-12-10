@@ -36,7 +36,8 @@ class _RegisterClientState extends State<RegisterClient> {
  Future register()async{
  if(_formkey.currentState!.validate()){
    if (confirmPass()) {
-      try{await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      try{
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(), 
         password: _passwordController.text.trim()
         ).then((value) => {postDetailsToFirestore(context)});
