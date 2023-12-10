@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_otp/email_otp.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/app_style.dart';
-import 'package:tabang_application/login/login.dart';
 import 'package:tabang_application/size_config.dart';
 
 
@@ -25,52 +22,21 @@ class _RegisterProviderState extends State<RegisterProvider> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final String role = "Service provider";
 
   bool isVisible = false;
   bool isObscure = true;
   bool isObscure2 = true;
 
-  EmailOTP otp = EmailOTP();
 
-  void register()async{
-    if(_formkey.currentState!.validate()){
-   if (confirmPass()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(), 
-        password: _passwordController.text.trim()
-        ).then((value) => {postDetailsToFirestore(context)})
-          .catchError((e) {});
-    }
-  }
-  }
-
-  bool confirmPass(){
-  if(_passwordController.text.trim()== _confirmPasswordController.text.trim()){
-    return true;
-  }else{
-    return false;
-  }
-}
-postDetailsToFirestore(BuildContext context) async {
-    var user = FirebaseAuth.instance.currentUser;
-    CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    ref.doc(user!.uid).set({
-      'firstName':_firstNameController.text.trim(),
-      'lastName':_lastNameController.text.trim(),
-      'contactNum':_contactNumController.text.trim(),
-      'email':_emailController.text.trim(),
-      'role': role
-      });
-    sendto(context);
-  }
-
-   void sendto(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Login()),
-  );
-}
+// void postTaskDetails(BuildContext context)async{
+//     var user = FirebaseAuth.instance.currentUser;
+//     CollectionReference ref = FirebaseFirestore.instance.collection('service');
+//     for(int i =0;i< service.length;i++){
+//       ref.add({
+//       'service': service[i],
+//       'service provider': FirebaseFirestore.doc('user/${user!.uid}'),
+//       });}
+// }
 
   @override
   void dispose() {
@@ -221,9 +187,6 @@ postDetailsToFirestore(BuildContext context) async {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 35,),
-                        Text("Services you wish to provide", style: mRegular.copyWith(color: mBrightOrange, fontSize: SizeConfig.blocksHorizontal!*4),),
-
                       ],
                     ),
                     ),
@@ -237,32 +200,294 @@ postDetailsToFirestore(BuildContext context) async {
                         ElevatedButton(
                         style: buttonOrange,
                         onPressed: ()async {
-                          // otp.setConfig(
-                          //   appEmail: "Allyssagrace2003@gmail.com",
-                          //   appName: "TABANG",
-                          //   userEmail: _emailController.text.trim(),
-                          //   otpLength: 4,
-                          //   otpType: OTPType.digitsOnly
-                          // );
-                          //  if (await otp.sendOTP() == true) {
-                          //   ScaffoldMessenger.of(context)
-                          //       .showSnackBar(const SnackBar(
-                          //     content: Text("OTP has been sent"),
-                          //   ));
-                          register();
-                          //  }else{
-                          //   ScaffoldMessenger.of(context)
-                          //       .showSnackBar(const SnackBar(
-                          //     content: Text("Oops, OTP send failed"),
-                          //   ));
-                          //  }
-                        }, 
+                          if(_formkey.currentState!.validate()){
+                          Navigator.of(context).push (MaterialPageRoute(builder: (context)=>ServiceChoice(
+                            firstName: _firstNameController.text.trim(),
+                            lastName: _lastNameController.text.trim(),
+                            contactNum: _contactNumController.text.trim(),
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                            confirmPassword: _confirmPasswordController.text.trim()
+                          )));
+                        }; 
+                        },
                         child:Text('Sign up', style: mBold.copyWith(
                         color: mWhite, fontSize:SizeConfig.blocksHorizontal!*5),
                       ),),
                       ],
                       ),
             const SizedBox(height: 40,),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class ServiceChoice extends StatefulWidget {
+  String firstName, lastName, contactNum, email,password, confirmPassword;
+  ServiceChoice({super.key, 
+  required this.firstName,
+  required this.lastName,
+  required this.contactNum,
+  required this.email,
+  required this.password,
+  required this.confirmPassword
+  });
+
+  @override
+  State<ServiceChoice> createState() => _ServiceChoiceState();
+}
+
+class _ServiceChoiceState extends State<ServiceChoice> {
+
+    var docId;
+  final String role = 'Service Provider';
+  bool? isChecked = false;
+  List<String> services =[];
+
+    void postUnverifiedProvider() async{
+  CollectionReference ref = FirebaseFirestore.instance.collection('user');
+    if(confirmPass()){
+    ref.add({
+    'firstName':widget.firstName,
+    'lastName':  widget.lastName,
+    'contactNum': widget.contactNum,
+    'email': widget.email,
+    'role': role, 
+    'verified': 0
+  }).then((value) => docId = value.id);
+  }
+}
+
+ bool confirmPass(){
+  if(widget.password== widget.confirmPassword){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color.fromARGB(255, 255, 106, 0),mOrange,mBrightOrange,mYellow],
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft
+            ),
+          ),
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: [
+              Row(children: [
+              IconButton(onPressed: () {
+                  Navigator.pop(context);
+                }, icon: SvgPicture.asset("assets/white_left_arrow.svg")),
+            ],),
+              Container(
+                padding: const EdgeInsets.only(left: 20, top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Services", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*10),),
+                    Text("Select the services you wish to provide", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4)),
+                    Row(
+                      children: [
+                        CheckboxListTile(
+                          title: Text("House Cleaning", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("House Cleaning");
+                            }else if(isChecked==false){
+                              services.remove("House Cleaning");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                          const SizedBox(width: 20,),
+                           CheckboxListTile(
+                          title: Text("Personal Shopper", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Personal Shopper");
+                            }else if(isChecked==false){
+                              services.remove("Personal Shopper");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CheckboxListTile(
+                          title: Text("Delievery", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Delievery");
+                            }else if(isChecked==false){
+                              services.remove("Delievery");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                          const SizedBox(width: 20,),
+                           CheckboxListTile(
+                          title: Text("Run Errands", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Run Errands");
+                            }else if(isChecked==false){
+                              services.remove("Run Errands");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CheckboxListTile(
+                          title: Text("Tutoring", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Tutoring");
+                            }else if(isChecked==false){
+                              services.remove("Tutoring");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                          const SizedBox(width: 20,),
+                           CheckboxListTile(
+                          title: Text("Transcription", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Transcription");
+                            }else if(isChecked==false){
+                              services.remove("Transcription");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CheckboxListTile(
+                          title: Text("Video Editor", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Video Editor");
+                            }else if(isChecked==false){
+                              services.remove("Video Editor");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                          const SizedBox(width: 20,),
+                           CheckboxListTile(
+                          title: Text("Photo Editor", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Photo Editor");
+                            }else if(isChecked==false){
+                              services.remove("Photo Editor");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CheckboxListTile(
+                          title: Text("Video Editor", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Video Editor");
+                            }else if(isChecked==false){
+                              services.remove("Video Editor");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                          const SizedBox(width: 20,),
+                           CheckboxListTile(
+                          title: Text("Others", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4),),
+                          value: isChecked, 
+                          onChanged: (bool? newValue){
+                            setState(() {
+                              isChecked = newValue;
+                            });
+                            if(isChecked == true){
+                              services.add("Photo Editor");
+                            }else if(isChecked==false){
+                              services.remove("Photo Editor");
+                            }
+                          },
+                          activeColor: mWhite,
+                          checkColor: mOrange,
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),

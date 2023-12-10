@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/app_style.dart';
 import 'package:tabang_application/login/login.dart';
+import 'package:tabang_application/login/role_management.dart';
 import 'package:tabang_application/size_config.dart';
 
 //need to check if this works
@@ -70,7 +71,7 @@ postDetailsToFirestore(BuildContext context) async {
   void sendto(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => Login()),
+    MaterialPageRoute(builder: (context) => SendEmailVerification()),
   );
 }
 
@@ -242,29 +243,7 @@ postDetailsToFirestore(BuildContext context) async {
                         ElevatedButton(
                         style: buttonWhite,
                         onPressed: ()async {
-                          // otp.setConfig(
-                          //   appEmail: "Allyssagrace2003@gmail.com",
-                          //   appName: "TABANG",
-                          //   userEmail: _emailController.text.trim(),
-                          //   otpLength: 4,
-                          //   otpType: OTPType.digitsOnly
-                          // );
-                          //  if (await otp.sendOTP() == true) {
-                          //   AwesomeDialog(
-                          //     context: context,
-                          //     dialogType: DialogType.info,
-                          //     title: 'OTP',
-                          //     desc: 'OTP has been sent'
-                          //   );
                             register();
-                          //  }else{
-                          //   AwesomeDialog(
-                          //     context: context,
-                          //     dialogType: DialogType.error,
-                          //     title: 'OTP',
-                          //     desc: 'OTP has not been sent'
-                          //   );
-                          //  }
                         }, 
                         child:Text('Sign up', style: mBold.copyWith(
                         color: mOrange, fontSize:SizeConfig.blocksHorizontal!*5),

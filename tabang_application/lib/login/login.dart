@@ -73,7 +73,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-    final _passwordController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool isVisible = false;
+  bool isObscure = true;
+
 
     Future login() async{
       if (_formkey.currentState!.validate()) {
@@ -81,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const RoleManagement()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const SendEmailVerification()));
       }
       on FirebaseAuthException catch (e){
       if (e.code == 'user-not-found') {
@@ -176,8 +180,18 @@ class _LoginPageState extends State<LoginPage> {
                               width: SizeConfig.screenWidth!*0.8,
                               child:  TextField(
                                 controller: _passwordController,
-                                decoration: const InputDecoration(
-                                  hintText: "Password"
+                                obscureText: isObscure,
+                                decoration:  InputDecoration(
+                                  hintText: "Password",
+                                  suffixIcon: IconButton(
+                                    icon: isObscure
+                                        ? SvgPicture.asset("assets/black_not_visible.svg")
+                                        : SvgPicture.asset("assets/black_is_visible.svg"),
+                                    onPressed: () {
+                                      setState(() {
+                                        isObscure = !isObscure;
+                                      });
+                                    }),
                                 ),
                               ),
                             ),
