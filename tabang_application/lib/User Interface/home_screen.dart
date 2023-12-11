@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/User%20Interface/search_page.dart';
-import 'package:tabang_application/app_style.dart';
-import 'package:tabang_application/size_config.dart';
+import 'package:tabang_application/utils/app_style.dart';
+import 'package:tabang_application/utils/size_config.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key?key}):super(key: key);

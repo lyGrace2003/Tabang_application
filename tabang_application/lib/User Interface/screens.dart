@@ -4,7 +4,7 @@ import 'package:tabang_application/User%20Interface/favorite_screen.dart';
 import 'package:tabang_application/User%20Interface/home_screen.dart';
 import 'package:tabang_application/User%20Interface/user_profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tabang_application/app_style.dart';
+import 'package:tabang_application/utils/app_style.dart';
 
 class Screens extends StatefulWidget {
   const Screens({super.key});

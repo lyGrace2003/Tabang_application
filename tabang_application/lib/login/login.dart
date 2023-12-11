@@ -1,14 +1,14 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:tabang_application/app_style.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/login/signup/signup_page.dart';
-import 'package:tabang_application/size_config.dart';
+import 'package:tabang_application/utils/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tabang_application/login/role_management.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Login extends StatelessWidget {
-  const Login({Key?key}):super(key: key);
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,23 +89,23 @@ class _LoginPageState extends State<LoginPage> {
       }
       on FirebaseAuthException catch (e){
       if (e.code == 'user-not-found') {
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.error,
-          desc: 'No user found for that email'
-          );
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
+          showErrorAlert("User not found", "Re-enter  your email/password");
+
         } else if (e.code == 'wrong-password') {
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.error,
-            desc: 'Wrong password'
-            );
+          showErrorAlert("Incorrect Password", "Re-enter your password");
       }
     }
     }
     }
 
+showErrorAlert(String title, String text){
+    return QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: title,
+      text: text,
+    );
+}
     @override
   void dispose() {
     _emailController.dispose();

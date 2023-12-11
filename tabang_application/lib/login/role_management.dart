@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/User%20Interface/screens.dart';
-import 'package:tabang_application/app_style.dart';
+import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/login/login.dart';
 import 'package:tabang_application/login/verify_email.dart';
 import 'package:tabang_application/provider%20interface/screens_provider.dart';
-import 'package:tabang_application/size_config.dart';
+import 'package:tabang_application/utils/size_config.dart';
 
 class RoleManagement extends StatelessWidget {
   const RoleManagement({super.key});
@@ -93,6 +93,5 @@ class CheckEligibility extends StatelessWidget {
   );
   }
 }
-
 
 

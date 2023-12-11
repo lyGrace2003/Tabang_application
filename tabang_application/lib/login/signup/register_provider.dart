@@ -1,15 +1,16 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:tabang_application/app_style.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/login/role_management.dart';
-import 'package:tabang_application/size_config.dart';
+import 'package:tabang_application/utils/size_config.dart';
+import 'package:tabang_application/utils/utils.dart';
 
 
-//create checkbox for all task and custom - needs to add user info to task(type) collection
 
 class RegisterProvider extends StatefulWidget {
   const RegisterProvider({super.key});
@@ -23,38 +24,18 @@ class _RegisterProviderState extends State<RegisterProvider> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _contactNumController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-
-  bool isVisible = false;
-  bool isObscure = true;
-  bool isObscure2 = true;
-
-
-// void postTaskDetails(BuildContext context)async{
-//     var user = FirebaseAuth.instance.currentUser;
-//     CollectionReference ref = FirebaseFirestore.instance.collection('service');
-//     for(int i =0;i< service.length;i++){
-//       ref.add({
-//       'service': service[i],
-//       'service provider': FirebaseFirestore.doc('user/${user!.uid}'),
-//       });}
-// }
 
   @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _contactNumController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -129,94 +110,36 @@ class _RegisterProviderState extends State<RegisterProvider> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 35,),
-                        Text("Email Address", style: mRegular.copyWith(color: mBrightOrange,fontSize: SizeConfig.blocksHorizontal!*4.5),),
-                        SizedBox(
-                          width: SizeConfig.screenWidth!*0.8,
-                          child: TextField(
-                            style: const TextStyle(color: mBrightOrange),
-                            controller: _emailController,
-                            decoration: const InputDecoration(
-                              enabledBorder: UnderlineInputBorder(      
-                                borderSide: BorderSide(color:mBrightOrange),   
-                                ), 
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 35,),
-                        Text("Password", style: mRegular.copyWith(color: mBrightOrange,fontSize: SizeConfig.blocksHorizontal!*4.5),),
-                        SizedBox(
-                          width: SizeConfig.screenWidth!*0.8,
-                          child: TextField(
-                            style: const TextStyle(color: mBrightOrange),
-                            controller: _passwordController,
-                            obscureText: isObscure,
-                            decoration:  InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(      
-                                borderSide: BorderSide(color:mBrightOrange),   
-                                ), 
-                                suffixIcon: IconButton(
-                                icon: isObscure
-                                    ? SvgPicture.asset("assets/orange_not_visible.svg")
-                                    : SvgPicture.asset("assets/orange_is_visible.svg"),
-                                onPressed: () {
-                                  setState(() {
-                                    isObscure = !isObscure;
-                                  });
-                                }),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 35,),
-                        Text("Confirm Password", style: mRegular.copyWith(color: mBrightOrange,fontSize: SizeConfig.blocksHorizontal!*4.5),),
-                        SizedBox(
-                          width: SizeConfig.screenWidth!*0.8,
-                          child: TextField(
-                            style: const TextStyle(color: mBrightOrange),
-                            obscureText: isObscure2,
-                            controller: _confirmPasswordController,
-                            decoration:  InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(      
-                                borderSide: BorderSide(color:mBrightOrange),   
-                                ), 
-                                suffixIcon: IconButton(
-                                icon: isObscure2
-                                    ? SvgPicture.asset("assets/orange_not_visible.svg")
-                                    : SvgPicture.asset("assets/orange_is_visible.svg"),
-                                onPressed: () {
-                                  setState(() {
-                                    isObscure2 = !isObscure2;
-                                  });
-                                }),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                     ),
                 ],
               ),
             ),
-            const SizedBox(height: 40,),
+            const SizedBox(height:70,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                         children:[
-                        ElevatedButton(
-                        style: buttonOrange,
+                        OutlinedButton(
+                        style: buttonOutlinedOrange,
                         onPressed: ()async {
                           if(_formkey.currentState!.validate()){
-                          Navigator.of(context).push (MaterialPageRoute(builder: (context)=>ServiceChoice(
+                            Navigator.of(context).push (MaterialPageRoute(builder: (context)=>RegisterProviderTwo(
                             firstName: _firstNameController.text.trim(),
                             lastName: _lastNameController.text.trim(),
                             contactNum: _contactNumController.text.trim(),
-                            email: _emailController.text.trim(),
-                            password: _passwordController.text.trim(),
-                            confirmPassword: _confirmPasswordController.text.trim()
                           )));
+                        }else{
+                          QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.error,
+                            title: 'Unfilled Form',
+                            text: 'Please enter all the information required',
+                          );
                         } 
                         },
-                        child:Text('Sign up', style: mBold.copyWith(
-                        color: mWhite, fontSize:SizeConfig.blocksHorizontal!*5),
+                        child:Text('Next', style: mBold.copyWith(
+                        color: mOrange, fontSize:SizeConfig.blocksHorizontal!*5),
                       ),),
                       ],
                       ),
@@ -229,16 +152,210 @@ class _RegisterProviderState extends State<RegisterProvider> {
   }
 }
 
+class RegisterProviderTwo extends StatefulWidget {
+  String firstName,lastName,contactNum;
+  RegisterProviderTwo({super.key,
+  required this.firstName,
+  required this.lastName,
+  required this.contactNum});
+
+  @override
+  State<RegisterProviderTwo> createState() => _RegisterProviderTwoState();
+}
+
+class _RegisterProviderTwoState extends State<RegisterProviderTwo> {
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  Uint8List? _image;
+
+  bool isVisible = false;
+  bool isObscure = true;
+  bool isObscure2 = true;
+
+
+
+bool confirmPass(){
+  if(_passwordController.text.trim()== _confirmPasswordController.text.trim()){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+  selectImage()async{
+  Uint8List im = await pickImage(ImageSource.gallery);
+  setState(() {
+    _image =im;
+  });
+}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
+          decoration: const BoxDecoration(
+            color: mWhite
+            ),
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: [
+              const SizedBox(height: 20,),
+              Row(children: [
+              IconButton(onPressed: () {
+                  Navigator.pop(context);
+                }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
+              ]),  
+                Form(
+                  key: _formkey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Stack(
+                              children:[
+                              _image!=null?CircleAvatar(
+                              radius: 64,
+                              backgroundImage: MemoryImage(_image!),
+                            )
+                            : const CircleAvatar(
+                              radius: 64,
+                              backgroundColor: mGrey,
+                            ),
+                            Positioned(
+                              bottom: -10,
+                              left: 80,
+                              child: IconButton(
+                                  onPressed: selectImage,
+                                  icon: const Icon(Icons.add_a_photo)),
+                            ),],),
+                          ],
+                        ), 
+                        const SizedBox(height: 35,),
+                            Text("Email Address", style: mRegular.copyWith(color: mOrange,fontSize: SizeConfig.blocksHorizontal!*4.5,),),
+                            SizedBox(
+                              width: SizeConfig.screenWidth!*0.8,
+                              child: TextField(
+                                style: const TextStyle(color: mOrange),
+                                controller: _emailController,
+                                decoration: const InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(      
+                                    borderSide: BorderSide(color:mOrange),   
+                                    ), 
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 35,),
+                            Text("Password", style: mRegular.copyWith(color: mOrange,fontSize: SizeConfig.blocksHorizontal!*4.5),),
+                            SizedBox(
+                              width: SizeConfig.screenWidth!*0.8,
+                              child: TextField(
+                                style: const TextStyle(color: mOrange),
+                                controller: _passwordController,
+                                obscureText: isObscure,
+                                decoration:  InputDecoration(
+                                  enabledBorder: const UnderlineInputBorder(      
+                                    borderSide: BorderSide(color:mOrange),   
+                                    ), 
+                                    suffixIcon: IconButton(
+                                    icon: isObscure
+                                        ? SvgPicture.asset("assets/orange_not_visible.svg")
+                                        : SvgPicture.asset("assets/orange_is_visible.svg"),
+                                    onPressed: () {
+                                      setState(() {
+                                        isObscure = !isObscure;
+                                      });
+                                    }),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 35,),
+                            Text("Confirm Password", style: mRegular.copyWith(color: mOrange,fontSize: SizeConfig.blocksHorizontal!*4.5),),
+                            SizedBox(
+                              width: SizeConfig.screenWidth!*0.8,
+                              child: TextField(
+                                style: const TextStyle(color: mOrange),
+                                obscureText: isObscure2,
+                                controller: _confirmPasswordController,
+                                decoration:  InputDecoration(
+                                  enabledBorder: const UnderlineInputBorder(      
+                                    borderSide: BorderSide(color:mOrange),   
+                                    ), 
+                                    suffixIcon: IconButton(
+                                    icon: isObscure2
+                                        ? SvgPicture.asset("assets/orange_not_visible.svg")
+                                        : SvgPicture.asset("assets/orange_is_visible.svg"),
+                                    onPressed: () {
+                                      setState(() {
+                                        isObscure2 = !isObscure2;
+                                      });
+                                    }),
+                                ),
+                              ),
+                            ),
+                        const SizedBox(height: 70,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center ,
+                          children: [
+                            OutlinedButton(
+                              style: buttonOutlinedOrange,
+                              onPressed: (){
+                               if(_formkey.currentState!.validate()){
+                                if(confirmPass()){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ServiceChoice(
+                                firstName: widget.firstName,
+                                lastName: widget.lastName,
+                                contactNum: widget.contactNum,
+                                email: _emailController.text.trim(),
+                                password: _passwordController.text.trim(),
+                                // image: _image!
+                                )));
+                              }else{
+                                 QuickAlert.show(
+                                  context: context,
+                                  type: QuickAlertType.error,
+                                  title: 'Incorrect password',
+                                  text: 'Password and confrim password dont match',
+                                );
+                              }}else{
+                                QuickAlert.show(
+                                context: context,
+                                type: QuickAlertType.error,
+                                title: 'Unfilled Form',
+                                text: 'Please enter all the information required',
+                              );
+                              }
+                              },
+                               child: Text("Next", style: mBold.copyWith(color: mOrange, fontSize: SizeConfig.blocksHorizontal!*4),)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+            ],),
+      ),
+    );
+  }
+}
+
 
 class ServiceChoice extends StatefulWidget {
-  String firstName, lastName, contactNum, email,password, confirmPassword;
+  String firstName, lastName, contactNum, email,password;
+  // Uint8List image;
   ServiceChoice({super.key, 
   required this.firstName,
   required this.lastName,
   required this.contactNum,
   required this.email,
   required this.password,
-  required this.confirmPassword
+  // required this.image,
   });
 
   @override
@@ -247,60 +364,57 @@ class ServiceChoice extends StatefulWidget {
 
 class _ServiceChoiceState extends State<ServiceChoice> {
 
-  var docId;
-  final String role = 'Service Provider';
   late DocumentReference _documentReference;
-  late CollectionReference _referenceService;
+  late CollectionReference _collectionReference;
 
   final services =[
     CheckBoxState(title: 'House Cleaning', rates: 200),
     CheckBoxState(title: 'Personal Shopper', rates: 100),
     CheckBoxState(title: 'Delivery', rates: 80),
     CheckBoxState(title: 'Run Errands', rates: 100),
-    CheckBoxState(title: 'Tutoring', rates: 200),
+    CheckBoxState(title: 'Tutoring', rates: 200), 
     CheckBoxState(title: 'Transcription', rates: 200),
     CheckBoxState(title: 'Video Editing', rates: 150),
     CheckBoxState(title: 'Photo Editing', rates: 100),
     CheckBoxState(title: 'Logo Design', rates: 200),
 
   ];
-
-
+  
   Future register()async{
-   if (confirmPass()) {
-      try{
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: widget.email, 
-        password: widget.password,
-        ).then((value) => {postUnverifiedProvider(context)});
-      } catch(e){
-        print(e);
-      }
+    try{
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: widget.email, 
+      password: widget.password,
+      ).then((value) => {postUnverifiedProvider(context)});
+    } catch(e){
+      print(e);
   }
 }
 
 
-void postUnverifiedService(data)async{
-  final user = FirebaseAuth.instance.currentUser;
-  _documentReference = FirebaseFirestore.instance.collection('users').doc(user!.uid);
-  _referenceService = _documentReference.collection('services');
-  _referenceService.add(data);
+void postUnverifiedService(data){
+  _documentReference = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
+  _documentReference.collection('services').add(data);
   }
 
     void postUnverifiedProvider(BuildContext context) async{
-  final user = FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     CollectionReference ref = FirebaseFirestore.instance.collection('users');
     ref.doc(user!.uid).set({
       'firstName': widget.firstName,
       'lastName':widget.lastName,
       'contactNum':widget.contactNum,
       'email':widget.email,
-      'role': role,
+      'role': 'Service Provider',
       'verified': '0',
+      // 'file', widget.img!
       });
-    sendto(context);
 }
-
+  
+Map<String, dynamic> data = {
+  "service": '', 
+  'rates': 0,
+};
 
   void sendto(BuildContext context) {
   Navigator.push(
@@ -309,21 +423,9 @@ void postUnverifiedService(data)async{
   );
 }
 
- bool confirmPass(){
-  if(widget.password== widget.confirmPassword){
-    return true;
-  }else{
-    return false;
-  }
-}
-
-Map<String, dynamic> data = {
-  "service": '', 
-  'rates': 0,
-};
-
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -365,13 +467,14 @@ Map<String, dynamic> data = {
                    ...services.map(buildSingleCheckBox).toList(),
                    
                    const SizedBox(height: 20,),
+
                    Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                      children: [
                        OutlinedButton(
                         style: buttonOutlinedWhite,
-                        onPressed: (){
-              
+                        onPressed: ()async{
+
                           register();
                           for(int i=0; i<services.length;i++){
                             if(services[i].value == true){
@@ -379,7 +482,8 @@ Map<String, dynamic> data = {
                               data.update("rates", (value)=> value = services[i].rates);
                               postUnverifiedService(data);
                             }
-                        }
+                          }
+                          sendto(context);
                         },
                          child: Text("Submit", style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),)),
                      ],

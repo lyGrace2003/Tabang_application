@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
-import 'package:tabang_application/app_style.dart';
+import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/login/role_management.dart';
-import 'package:tabang_application/size_config.dart';
+import 'package:tabang_application/utils/size_config.dart';
 
 //confrimation email cant be sent
 
