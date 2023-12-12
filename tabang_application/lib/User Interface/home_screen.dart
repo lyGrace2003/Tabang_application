@@ -1,72 +1,112 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/User%20Interface/search_page.dart';
 import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/utils/size_config.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key?key}):super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _screenController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Container(
-      child: ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
+
+    return Scaffold(
+      body: ListView(
         children: [
-          Column(
-            children: [
-              Container(
-                width: SizeConfig.screenWidth,
-                height: 100, 
-                decoration: const BoxDecoration(color: mOrange),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 45,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: mWhite,
-                        borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Row(
-                          children: [
-                            IconButton(onPressed: () {
-
-                              //change this - it needs to allow users to type then search related
-
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const SearchPage()),
-                              );
-                            }, icon: SvgPicture.asset('assets/search.svg')),
-                            const SizedBox(
-                              width: 200,
-                            ),
-                            IconButton(onPressed: () {
-
-                              //change this - it needs to allow users to clear text
-
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const SearchPage()),
-                              );
-                              }, icon: SvgPicture.asset('assets/cancel_search.svg')),
-                          ],
-                          ),
+        SizedBox(
+        width: SizeConfig.screenWidth,
+        height: SizeConfig.screenHeight,
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: [
+            Container(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight!*0.12,
+              decoration: const BoxDecoration(
+                color: mOrange
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: SizeConfig.screenWidth!*0.8,
+                    height: SizeConfig.blocksVertical!*5.5,
+                    decoration:  BoxDecoration(
+                      color: mWhite,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    
-                ],)
-              )
-            ],
-          ),
+                    child:  TextField(
+                      textAlignVertical: TextAlignVertical.center,
+                      textAlign: TextAlign.left,
+                      controller: _screenController,
+                      decoration:  InputDecoration(
+                        filled: false,
+                        border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(width: 0.2),
+                        ),
+                        hintText: "Search...",
+                        prefixIcon: IconButton(
+                          icon: SvgPicture.asset("assets/search.svg"),
+                          onPressed: (){
+
+                          },
+                          ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  IconButton(
+                    onPressed: (){
+
+                    },
+                     icon: SvgPicture.asset("assets/question.svg"))
+                ]),
+            ),
+            const SizedBox(height: 30),
+            //add picture widget here
+
+
+            const SizedBox(height: 30),
+            Text("Categories", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*5),),
+            Row(
+              children: [
+                Container(
+                  
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
         ],
-    ),
+      ),
     );
+  }
+}
+
+
+class SearchFilter extends StatefulWidget {
+  const SearchFilter({super.key});
+
+  @override
+  State<SearchFilter> createState() => _SearchFilterState();
+}
+
+class _SearchFilterState extends State<SearchFilter> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

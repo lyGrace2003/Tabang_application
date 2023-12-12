@@ -8,10 +8,8 @@ import 'package:quickalert/quickalert.dart';
 import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/login/role_management.dart';
 import 'package:tabang_application/utils/size_config.dart';
-import 'package:tabang_application/auth_methods.dart/methods.dart';
 import 'package:tabang_application/utils/utils.dart';
 
-//need to check if this works
 
 class RegisterClient extends StatefulWidget {
   const RegisterClient({super.key});
@@ -234,7 +232,8 @@ postDetailsToFirestore(BuildContext context) async {
       'lastName':widget.lastName,
       'contactNum':widget.contactNum,
       'email':_emailController.text.trim(),
-      'role': role
+      'role': role,
+      'profileUrl': _image!,
       });
     sendto(context);
   }

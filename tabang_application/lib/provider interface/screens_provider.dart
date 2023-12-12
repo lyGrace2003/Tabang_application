@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tabang_application/provider%20interface/booking_screen_provider.dart';
+import 'package:tabang_application/provider%20interface/provider_profile.dart';
 import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/utils/size_config.dart';
 
@@ -14,8 +16,8 @@ class _ScreensProviderState extends State<ScreensProvider> {
 
   int _index = 0;
   final screens =[
-    const BookingScreenProvider(),
-    const UserScreenProvider(),
+    const BookingsProvider(),
+    const ProvderProfile(),
   ];
 
   @override
@@ -46,50 +48,5 @@ class _ScreensProviderState extends State<ScreensProvider> {
           ],
         ),
       );
-  }
-}
-
-class BookingScreenProvider extends StatefulWidget {
-  const BookingScreenProvider({super.key});
-
-  @override
-  State<BookingScreenProvider> createState() => _BookingScreenProviderState();
-}
-
-class _BookingScreenProviderState extends State<BookingScreenProvider> {
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context);
-
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        width: SizeConfig.screenWidth,
-        height: SizeConfig.screenHeight,
-        decoration: const BoxDecoration(color: mWhite),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Current Booking", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*5),)
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class UserScreenProvider extends StatefulWidget {
-  const UserScreenProvider({super.key});
-
-  @override
-  State<UserScreenProvider> createState() => _UserScreenProviderState();
-}
-
-class _UserScreenProviderState extends State<UserScreenProvider> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

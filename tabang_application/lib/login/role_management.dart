@@ -50,11 +50,12 @@ class _SendEmailVerificationState extends State<SendEmailVerification> {
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot){
-          if(snapshot.hasData){
+          if(!snapshot.hasData){
             return const VerifyEmail();
-          }else{
-            return const Login();
+          }if(snapshot.hasData){
+            return const VerifyEmail();
           }
+          return CircularProgressIndicator();
         },
         ),
     );

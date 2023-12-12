@@ -373,7 +373,6 @@ class _ServiceChoiceState extends State<ServiceChoice> {
     CheckBoxState(title: 'Delivery', rates: 80),
     CheckBoxState(title: 'Run Errands', rates: 100),
     CheckBoxState(title: 'Tutoring', rates: 200), 
-    CheckBoxState(title: 'Transcription', rates: 200),
     CheckBoxState(title: 'Video Editing', rates: 150),
     CheckBoxState(title: 'Photo Editing', rates: 100),
     CheckBoxState(title: 'Logo Design', rates: 200),
@@ -414,6 +413,7 @@ void postUnverifiedService(data){
 Map<String, dynamic> data = {
   "service": '', 
   'rates': 0,
+  'desc': '',
 };
 
   void sendto(BuildContext context) {
