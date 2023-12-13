@@ -55,7 +55,7 @@ class _SendEmailVerificationState extends State<SendEmailVerification> {
           }if(snapshot.hasData){
             return const VerifyEmail();
           }
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         },
         ),
     );
@@ -81,7 +81,7 @@ class CheckEligibility extends StatelessWidget {
           children:[
             Row(children:[
               IconButton(onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Login()));
                 }, icon: SvgPicture.asset("assets/white_left_arrow.svg")),
               ],
             ),

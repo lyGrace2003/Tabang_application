@@ -34,12 +34,26 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        warningsAsErrors true
+        checkReleaseBuilds true
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('C:/Users/User/keystore.jks')
+            storePassword 'ImgoingtoNZ'
+            keyAlias 'Allyssa Echevarria'
+            keyPassword 'ImgoingtoNZ'
+        }
     }
 
     defaultConfig {

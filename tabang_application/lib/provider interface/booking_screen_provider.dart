@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tabang_application/data/booking.dart';
+import 'package:tabang_application/data/visible.dart';
 import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/utils/size_config.dart';
+import 'package:provider/provider.dart';
 
 class BookingsProvider extends StatefulWidget {
   const BookingsProvider({super.key});
@@ -12,267 +14,381 @@ class BookingsProvider extends StatefulWidget {
   State<BookingsProvider> createState() => _BookingsProviderState();
 }
 
+
 class _BookingsProviderState extends State<BookingsProvider> {
-  final CollectionReference _currentCollection = FirebaseFirestore.instance.collection('currentBooking');
-  final CollectionReference _historyCollection = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection('history');
+
+
+  List<Booking> curr =[
+    Booking(
+      service: 'Video Editing',
+      providerID: 's4yHnmurmtRQXnv7bI0vsFq8GCg2',
+      provider: 'Allyssa Echevarria',
+      clientID: '4Ms8zRFHxxgiOG29FaNupgsSlZ73',
+      client: 'rhunnan liao',
+      rates: '150',
+      coverUrl: 'assets/Video-Editing.jpg')
+  ];
+
+  List<Booking> history =[
+    Booking(
+      service: 'Tutoring',
+      providerID: 's4yHnmurmtRQXnv7bI0vsFq8GCg2',
+      provider: 'Allyssa Echevarria',
+      clientID: '4Ms8zRFHxxgiOG29FaNupgsSlZ73',
+      client: 'rhunnan liao',
+      rates: '200',
+      coverUrl: 'assets/tutoring.jpg'),
+      Booking(
+      service: 'Video Editing',
+      providerID: 's4yHnmurmtRQXnv7bI0vsFq8GCg2',
+      provider: 'Allyssa Echevarria',
+      clientID: '4Ms8zRFHxxgiOG29FaNupgsSlZ73',
+      client: 'Zeirah Gerat',
+      rates: '200',
+      coverUrl: 'assets/Video-Editing.jpg')
+  ];
+
  
-   late final User? user;
-
-  @override
-  void initState() {
-    super.initState();
-    user = FirebaseAuth.instance.currentUser!;
-  }
-
-  Future<QuerySnapshot> getCurrentBooking() async {
-    return await _currentCollection
-        .limit(1)
-        .where('providerID', isEqualTo: user!.uid)
-        .get();
-  }
-
-
   @override
   Widget build(BuildContext context) {
+     final visibilityProvider = Provider.of<VisibilityProvider>(context);
     SizeConfig().init(context);
 
     return Scaffold(
-      body: ListView(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
+      body:ListView(
+        children: [ Container(
+          padding: const EdgeInsets.all(20),
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight,
-            decoration: const BoxDecoration(color: mWhite),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 40,),
-                Text("Current Booking", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*7),),
-                const SizedBox(height: 25,),
-      
-              //obtain single document from firestore
-              FutureBuilder<QuerySnapshot>(
-              future:  getCurrentBooking(),
-              builder: (BuildContext context, snapshot) {
-                 if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              }else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Text('You have no current bookings', style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),);
-              }else if (snapshot.hasData) {
-              var doc = snapshot.data!.docs.first;
-              final coverUrl = doc['coverUrl'];
-              final service = doc["service"];
-              final client = doc["client"];
-              final price = doc["price"];
-              final docID = doc.id;
-      
-                return Container(
-                  padding: const EdgeInsets.all(30),
-                  width: 400,
-                  height: 200,
-                  decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    image: NetworkImage(coverUrl),
-                    fit: BoxFit.cover,
-                  ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(service, style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*8),),
-                      const SizedBox(height: 20,),
-                      Row(
-                        children: [
-                          Text(client, style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),),
-                          const SizedBox(width: 20,),
-                          Text(price, style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),),
-                          const SizedBox(width: 20,),
-                          IconButton(
-                            onPressed: (){},  // get current booking info and update 
-                              icon: const Icon(Icons.info_rounded, size: 30.0, color: mWhite,)
-                              )
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ),  
-                GestureDetector(
-                  onTap:(){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PendingPage()));
-                  },
-                  child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: 100,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Pending", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*7),),
-                        const SizedBox(width: 50,),
-                        const Icon(Icons.arrow_forward_ios_rounded),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10,),
-                Text("Previous Booking", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*7),),
-                
-                // streambuilder of all previousbooking
-                  StreamBuilder<QuerySnapshot>(
-                  stream: _historyCollection.snapshots(),
-                  builder: (context, snapshot){
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                  );
-                }else if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
-                  return Text('You have no previous bookings', style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),);
-                }else if(snapshot.hasData){
-                  var doc  = snapshot.data!.docs;
-                  return ListView.builder(
-                    itemCount: doc.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                      padding: const EdgeInsets.all(30),
-                      width: 400,
-                      height: 150,
-                      decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      image: DecorationImage(
-                        image: NetworkImage(doc[index]['coverUrl']),
-                        fit: BoxFit.cover,
-                      ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(doc[index]['service'], style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*8),),
-                          const SizedBox(height: 20,),
-                          Row(
-                            children: [
-                              Text(doc[index]['client'], style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),),
-                              const SizedBox(width: 20,),
-                              Text(doc[index]['price'], style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),),
-                              const SizedBox(width: 20,),
-                              Text(doc[index]['date'], style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),), 
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                    }
-                  );
-                }
-                return const Center(child: CircularProgressIndicator());
-                  }
-                  )
-              ]
-            )
-          ),
-        ],
-      )
-    );
-  }
-  }
-
-  class PendingPage extends StatefulWidget {
-  const PendingPage({super.key});
-
-  @override
-  State<PendingPage> createState() => _PendingPageState();
-}
-
-class _PendingPageState extends State<PendingPage> {
-  final CollectionReference _pendingCollection = FirebaseFirestore.instance.collection('pendingBooking');
-  final user = FirebaseAuth.instance.currentUser!;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-          IconButton(onPressed: () {
-                  Navigator.pop(context);
-                }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
-          StreamBuilder<QuerySnapshot>(
-            stream: _pendingCollection.where('providerID', isEqualTo: user.uid).snapshots(),
-             builder: (context, snapshot){
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-            );
-          }else if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
-            return Text('You have no pending bookings', style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),);
-          }else if(snapshot.hasData){
-            var doc  = snapshot.data!.docs;
-            return ListView.builder(
-              itemCount: doc.length,
-              itemBuilder: (context, index) {
-                return Container(
-                padding: const EdgeInsets.all(30),
-                width: 400,
-                height: 200,
-                decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: NetworkImage(doc[index]['coverUrl']),
-                  fit: BoxFit.cover,
-                ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: SizeConfig.blocksVertical!*2,),
+                Text("Current Booking", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*6),),
+                SizedBox(height: SizeConfig.blocksVertical!*2,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(doc[index]['service'], style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*8),),
-                    const SizedBox(height: 20,),
-                    Row(
-                      children: [
-                        Text(doc[index]['client'], style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),),
-                        const SizedBox(width: 20,),
-                        Text(doc[index]['price'], style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),),
-                        const SizedBox(width: 20,),
-                        IconButton(
-                          onPressed: (){},  // get current booking info and update 
-                            icon: const Icon(Icons.check, size: 30.0, color: mWhite,)
+                    visibilityProvider.getContainerVisibility('container1')
+                     ?  GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>CurrInfo(curr: curr))),
+                      child: Container(
+                        padding: const EdgeInsets.only(left:30),
+                        width: SizeConfig.screenWidth!*0.9,
+                        height: SizeConfig.screenHeight!*0.3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: DecorationImage(image: AssetImage(curr[0].coverUrl),fit: BoxFit.cover),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(curr[0].service, style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*6)),
+                            Row(
+                              children: [
+                                Text(curr[0].client, style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
+                                SizedBox(width: SizeConfig.blocksHorizontal!*30,),
+                                Text(curr[0].rates, style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
+                                SizedBox(width: SizeConfig.blocksHorizontal!*2,),
+                                IconButton(
+                                  onPressed: (){},
+                                  icon: const Icon(Icons.info_rounded, size: 20.0,color: mWhite,))
+                              ],
                             ),
-                        IconButton(
-                          onPressed: (){},  // get current booking info and update 
-                            icon: const Icon(Icons.cancel, size: 30.0, color: mWhite,)
-                            )
-                        
-                      ],
+                          ],
+                        ),
+                      ),
                     )
+                    : Container(),
                   ],
                 ),
-               );
-              }
-            );
-          }
-          return  const Center(child: CircularProgressIndicator());
-             }
-            )
-          ],
-        ),
+                GestureDetector(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>PendingBooking())),
+                  child: Container(
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.screenHeight!*0.2,
+                  
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Pending Bookings", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*5),),
+                      const Icon(Icons.arrow_forward_ios, size: 20.0,color: mBrightOrange,),
+                    ],
+                  ),
+                ),
+                ),
+                SizedBox(height: SizeConfig.blocksVertical!*1,),
+                Text("Previous Bookings", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*5),),
+                SizedBox(height: SizeConfig.blocksVertical!*1,),
+                Expanded(
+                  child: History(history: history),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+  );
+  }
+}
+
+class History extends StatelessWidget {
+  final List<Booking> history;
+
+  History({
+    Key? key,
+    required this.history,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final visibilityProvider = Provider.of<VisibilityProvider>(context);
+
+    return Consumer<VisibilityProvider>(
+      builder: (context, provider, _) {
+        return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: provider.getContainerVisibility('container4') ? history.length + 1 : history.length,
+          itemBuilder: (context, index) {
+            if (provider.getContainerVisibility('container4') && index == 0) {
+              // This is the fixed container
+              return Container(
+                margin: EdgeInsets.only(right: 20, left: 1), // Adjust the margin as needed
+                width: SizeConfig.screenWidth! * 0.88,
+                height: SizeConfig.screenHeight! * 0.2,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(image: AssetImage("assets/Video-Editing.jpg"), fit: BoxFit.cover),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Video Editing",
+                      style: mBold.copyWith(
+                        color: mWhite,
+                        fontSize: SizeConfig.blocksHorizontal! * 6,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "rhunnan liao",
+                          style: mRegular.copyWith(
+                            color: mWhite,
+                            fontSize: SizeConfig.blocksHorizontal! * 4,
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.blocksHorizontal! * 30),
+                        Text(
+                          "150",
+                          style: mRegular.copyWith(
+                            color: mWhite,
+                            fontSize: SizeConfig.blocksHorizontal! * 4,
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.blocksHorizontal! * 2),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.info_rounded, size: 20.0, color: mWhite),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              // This is a dynamically generated item
+              Booking prev = history[provider.getContainerVisibility('container4') ? index - 1 : index];
+              return Container(
+                margin: EdgeInsets.only(left: index == 0 ? 0 : 20),
+                padding: const EdgeInsets.only(left: 30),
+                width: SizeConfig.screenWidth! * 0.9,
+                height: SizeConfig.screenHeight! * 0.2,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: DecorationImage(
+                    image: AssetImage(prev.coverUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      prev.service,
+                      style: mBold.copyWith(
+                        color: mWhite,
+                        fontSize: SizeConfig.blocksHorizontal! * 6,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          prev.client,
+                          style: mRegular.copyWith(
+                            color: mWhite,
+                            fontSize: SizeConfig.blocksHorizontal! * 4,
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.blocksHorizontal! * 30),
+                        Text(
+                          prev.rates,
+                          style: mRegular.copyWith(
+                            color: mWhite,
+                            fontSize: SizeConfig.blocksHorizontal! * 4,
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.blocksHorizontal! * 2),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.info_rounded, size: 20.0, color: mWhite),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        );
+      },
     );
   }
-}        
+}
 
+//add booking info and progress bar
+class CurrInfo extends StatelessWidget {
+  List<Booking> curr;
+  CurrInfo({super.key,
+  required this.curr});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children:[
+        Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
+          child: Column(
+            children: [
+              const SizedBox(height: 20,),
+                Row(children: [
+                IconButton(onPressed: () {
+                    Navigator.pop(context);
+                  }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
+              ],),
+              
+            ],
+          ),
+        )
+      ],
+      );
+  }
+}
+
+class PendingBooking extends StatelessWidget {
+  const PendingBooking({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final visibilityProvider = Provider.of<VisibilityProvider>(context);
+    return Scaffold(
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        children: [
+          Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight,
+          child: Column(
+            children: [
+              const SizedBox(height: 20,),
+                Row(children: [
+                IconButton(onPressed: () {
+                    Navigator.pop(context);
+                  }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
+              ],),
+
+              SizedBox(height: SizeConfig.blocksVertical!*4,),
+              visibilityProvider.getContainerVisibility('container2')
+              ?Container(
+              padding: const EdgeInsets.only(left:30),
+                width: SizeConfig.screenWidth!*0.9,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(image: AssetImage('assets/Video-Editing.jpg'),fit: BoxFit.cover),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Video Editing", style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*6)),
+                    Row(
+                      children: [
+                        Text("rhunnan liao", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
+                        SizedBox(width: SizeConfig.blocksHorizontal!*25,),
+                        Text("150", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
+                        SizedBox(width: SizeConfig.blocksHorizontal!*2,),
+                        IconButton(
+                          onPressed: (){
+                            visibilityProvider.toggleContainerVisibility('container1');
+                            visibilityProvider.toggleContainerVisibility('container2');
+                          },
+                          icon: const Icon(Icons.check_circle, size: 20.0,color: mWhite,)),
+                        IconButton(
+                          onPressed: (){},
+                          icon: const Icon(Icons.cancel, size: 20.0,color: mWhite,)),
+                      ],
+                    ),
+                  ],
+                ),
+            )
+            : Container(),
+            SizedBox(height: SizeConfig.blocksVertical!*3,),
+             visibilityProvider.getContainerVisibility('container3')
+             ?Container(
+              padding: const EdgeInsets.only(left:30),
+                width: SizeConfig.screenWidth!*0.9,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(image: AssetImage('assets/logo-designing.jpg'),fit: BoxFit.cover),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text("Logo Design", style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*6)),
+                    Row(
+                      children: [
+                        Text("Zeirah Gerat", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
+                        SizedBox(width: SizeConfig.blocksHorizontal!*25,),
+                        Text("200", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
+                        SizedBox(width: SizeConfig.blocksHorizontal!*2,),
+                        IconButton(
+                          onPressed: (){},
+                          icon: const Icon(Icons.check_circle, size: 20.0,color: mWhite,)),
+                        IconButton(
+                          onPressed: (){
+                            visibilityProvider.toggleContainerVisibility('container3');
+                          },
+                          icon: const Icon(Icons.cancel, size: 20.0,color: mWhite,)),
+                      ],
+                    ),
+                  ],
+                ),
+            )
+            : Container(),
+            ],
+          ),
+        ),
+            ],
+          ),
+        );
+  }
+}

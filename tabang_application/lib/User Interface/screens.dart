@@ -20,7 +20,7 @@ class _ScreensState extends State<Screens> {
     const HomeScreen(),
     const BookingsScreen(),
     const FavoriteScreen(),
-    const UserProfileScreen(),
+    const ClientProfile(),
   ];
 
   @override

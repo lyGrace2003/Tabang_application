@@ -6,7 +6,7 @@ import 'package:tabang_application/login/signup/register_provider.dart';
 import 'package:tabang_application/utils/size_config.dart';
 
 class SignupPage extends StatelessWidget {
-  const SignupPage({Key?key}):super(key: key);
+  const SignupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +23,16 @@ class SignupPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20,),
+            SizedBox(height: SizeConfig.blocksVertical!*3,),
             Row(
             children:[IconButton(onPressed: () {
                 Navigator.pop(context);
               }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
             ],
             ),
-            const SizedBox(height: 50,),
+            SizedBox(height: SizeConfig.blocksVertical!*6,),
             Text("Sign Up", style: mRegular.copyWith(color: mOrange,fontSize: SizeConfig.blocksHorizontal!*12, letterSpacing: 2),),
-            const SizedBox(height: 10,),
+            SizedBox(height: SizeConfig.blocksVertical!*3,),
             SizedBox(
               width: 300,
               height: 300,
@@ -50,7 +50,7 @@ class SignupPage extends StatelessWidget {
                             ),
                           );
                         }, child: Text("User", style: mRegular.copyWith(color: mOrange, fontSize: SizeConfig.blocksHorizontal!*6),)),
-                  const SizedBox(height: 40,),
+                  SizedBox(height: SizeConfig.blocksVertical!*6,),
                   ElevatedButton(
                     style: buttonOrange,
                     onPressed: () {

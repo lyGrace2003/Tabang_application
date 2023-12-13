@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:tabang_application/provider%20interface/booking_screen_provider.dart';
 import 'package:tabang_application/provider%20interface/provider_profile.dart';
 import 'package:tabang_application/utils/app_style.dart';
-import 'package:tabang_application/utils/size_config.dart';
 
 class ScreensProvider extends StatefulWidget {
   const ScreensProvider({super.key});

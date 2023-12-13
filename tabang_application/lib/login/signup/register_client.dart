@@ -62,7 +62,7 @@ class _RegisterClientState extends State<RegisterClient> {
             ],),
             Container(
               
-              padding: EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.only(left: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,7 +199,7 @@ bool confirmPass(){
   void sendto(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => SendEmailVerification()),
+    MaterialPageRoute(builder: (context) => const SendEmailVerification()),
   );
 }
 

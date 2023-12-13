@@ -54,7 +54,7 @@ class _RegisterProviderState extends State<RegisterProvider> {
                 }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
             ],),
             Container(
-              padding: EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.only(left: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,17 +384,24 @@ class _ServiceChoiceState extends State<ServiceChoice> {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: widget.email, 
       password: widget.password,
-      ).then((value) => {postUnverifiedProvider(context)});
+      );
+
+     await Future.delayed(const Duration(seconds: 2));
+
+
+      postUnverifiedProvider(context);
     } catch(e){
       print(e);
   }
 }
 
 
-void postUnverifiedService(data){
-  _documentReference = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid);
-  _documentReference.collection('services').add(data);
-  }
+// void postUnverifiedService(data)async{
+//   await Future.delayed(const Duration(seconds: 5));
+//   DocumentReference userDocument = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid);
+//   CollectionReference servicesCollection = userDocument.collection('services');
+//   servicesCollection.add(data);
+//   }
 
     void postUnverifiedProvider(BuildContext context) async{
     final user = FirebaseAuth.instance.currentUser;
@@ -419,7 +426,7 @@ Map<String, dynamic> data = {
   void sendto(BuildContext context) {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => SendEmailVerification()),
+    MaterialPageRoute(builder: (context) => const SendEmailVerification()),
   );
 }
 
@@ -464,7 +471,7 @@ Map<String, dynamic> data = {
                         Text("Select the services you wish to provide", style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4)),
                       ],
                     ),
-                   ...services.map(buildSingleCheckBox).toList(),
+                   ...services.map(buildSingleCheckBox),
                    
                    const SizedBox(height: 20,),
 
@@ -480,7 +487,7 @@ Map<String, dynamic> data = {
                             if(services[i].value == true){
                               data.update("service", (value)=> value = services[i].title);
                               data.update("rates", (value)=> value = services[i].rates);
-                              postUnverifiedService(data);
+                              // postUnverifiedService(data);
                             }
                           }
                           sendto(context);

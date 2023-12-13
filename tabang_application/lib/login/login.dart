@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim());
-          Navigator.push(context, MaterialPageRoute(builder: (context) =>  SendEmailVerification()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>  const SendEmailVerification()));
       }
       on FirebaseAuthException catch (e){
       if (e.code == 'user-not-found') {
@@ -119,6 +119,7 @@ showErrorAlert(String title, String text){
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Container(
         width: SizeConfig.screenWidth,
         height: SizeConfig.screenHeight,
@@ -131,20 +132,20 @@ showErrorAlert(String title, String text){
         ),
         child: Column(
           children:[
-            const SizedBox(height: 20,),
+            SizedBox(height: SizeConfig.blocksVertical!*3,),
             Row(children:[
               IconButton(onPressed: () {
                   Navigator.pop(context);
                 }, icon: SvgPicture.asset("assets/white_left_arrow.svg")),
               ],
             ),
-            const SizedBox(height: 120,),
+            SizedBox(height: SizeConfig.blocksVertical!*15,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("TABANG",style: mExtraBold.copyWith(color: mWhite, fontSize:SizeConfig.blocksHorizontal!*14,letterSpacing:5),),],
             ),
-            const SizedBox(height: 100,),
+            SizedBox(height: SizeConfig.blocksVertical!*10,),
             Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(30),
@@ -156,17 +157,17 @@ showErrorAlert(String title, String text){
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 15,),
+                      SizedBox(height: SizeConfig.blocksVertical!*0.5,),
                       Text("Welcome Back", style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*6),),
-                      const SizedBox(height: 6,),
+                      SizedBox(height: SizeConfig.blocksVertical!*1,),
                       Text("Login to continue", style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*3.5),),
-                      const SizedBox(height: 30,),
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
                       Form(
                         key: _formkey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
+                            SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
                               child:  TextField(
                                 controller: _emailController,
@@ -175,8 +176,8 @@ showErrorAlert(String title, String text){
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 20,),
-                            Container(
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
+                            SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
                               child:  TextField(
                                 controller: _passwordController,
@@ -199,7 +200,7 @@ showErrorAlert(String title, String text){
                       ),
                       
       
-                      const SizedBox(height: 50),
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
                       Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                         children:[
@@ -210,7 +211,7 @@ showErrorAlert(String title, String text){
                       ),),
                       ],
                       ),
-                      const SizedBox(height: 14,),
+                      SizedBox(height: SizeConfig.blocksVertical!*1,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
