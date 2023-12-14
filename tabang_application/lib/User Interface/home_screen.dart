@@ -202,7 +202,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(width: SizeConfig.blocksHorizontal!*0.3,),
                     IconButton(
                       onPressed: (){
-
+                        showMenu(
+                        context: context,
+                        position: const RelativeRect.fromLTRB(100, 100, 0, 0), // Adjust the position as needed
+                        items: [
+                          PopupMenuItem(
+                            child: Center(child: Text("Oneline Help", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                          PopupMenuItem(
+                            child: Center(child: Text("FAQs", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                          PopupMenuItem(
+                            child: Center(child: Text("Site Map", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                        ],
+                      );
                       },
                        icon: const Icon(Icons.info_outline_rounded,color: mGrey,size: 25,))
                   ]),

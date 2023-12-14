@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:tabang_application/User%20Interface/home_screen.dart';
 import 'package:tabang_application/data/booking.dart';
 import 'package:tabang_application/data/visible.dart';
@@ -242,6 +244,26 @@ class _BookingScreenState extends State<BookingScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(width: SizeConfig.blocksHorizontal!*0.3,),
+                    IconButton(
+                      onPressed: (){
+                        showMenu(
+                        context: context,
+                        position: const RelativeRect.fromLTRB(100, 100, 0, 0), // Adjust the position as needed
+                        items: [
+                          PopupMenuItem(
+                            child: Center(child: Text("Oneline Help", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                          PopupMenuItem(
+                            child: Center(child: Text("FAQs", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                          PopupMenuItem(
+                            child: Center(child: Text("Site Map", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                        ],
+                      );
+                      },
+                       icon: const Icon(Icons.info_outline_rounded,color: mGrey,size: 25,))
                   ],
                 ),
             ),
@@ -304,6 +326,7 @@ class CurrInfoUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visibilityProvider = Provider.of<VisibilityProvider>(context);
     return Scaffold(
       body: Column(
         children: [
@@ -320,18 +343,27 @@ class CurrInfoUser extends StatelessWidget {
                     IconButton(onPressed: () {
                     Navigator.pop(context);
                   }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
-                  IconButton(onPressed: (){
-                    PopupMenuButton(
-                      itemBuilder:(context)=>[
-                        PopupMenuItem(
-                          child: Center(child: Text("Phone call", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),))),
-                        PopupMenuItem(
-                          child: Center(child: Text("Chat", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),))),
+                  IconButton(
+                    onPressed: () {
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(100, 100, 0, 0), // Adjust the position as needed
+                        items: [
                           PopupMenuItem(
-                          child: Center(child: Text("Phone call", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),))),
-                      ] ,
+                            child: Center(child: Text("Phone call", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                          PopupMenuItem(
+                            child: Center(child: Text("Chat", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                          PopupMenuItem(
+                            child: Center(child: Text("Video call", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal! * 4))),
+                          ),
+                        ],
                       );
-                  }, icon: Icon(Icons.phone, size: 30, color: mOrange,)),
+                    },
+                    icon: Icon(Icons.phone, size: 30, color: mOrange),
+                  ),
+
                 ],
               ),
               Container(
@@ -348,12 +380,45 @@ class CurrInfoUser extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: mGrey.withOpacity(0.5),
                 ),
-                child: Column(
-                  children: [
-                    Text(curr.service, style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),),
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
+                      Text(curr.service, style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),),
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
+                      Text('Provider: ${curr.provider}', style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*3.5),),
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
+                      Text('Client: ${curr.client}', style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*3.5),),
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
+                      Text('Price: ${curr.provider}', style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*3.5),),
+                      SizedBox(height: SizeConfig.blocksVertical!*4,),
+                      Text('Booked: 4pm, December 15 2023', style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*3.5),),
+                    ],
+                  ),
+                ),
+                SizedBox(height: SizeConfig.blocksVertical!*6,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [OutlinedButton(
+                    onPressed: (){
+                      QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.confirm,
+                      title: 'Cancel Booking',
+                      text: 'are you sure you want to cancel you booking?',
+                      onConfirmBtnTap: (){
+                        visibilityProvider.toggleContainerVisibility('container1');
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                      }
+                    );
+                    }, 
+                    child: Text("Cancel Booking", style: mBold.copyWith(color: mOrange, fontSize: SizeConfig.blocksHorizontal!*4),),
+                    ),
                   ],
                 ),
-              )
             ],
           ),
           )
