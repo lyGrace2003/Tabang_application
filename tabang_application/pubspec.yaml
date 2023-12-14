@@ -20,12 +20,12 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_core_platform_interface: ^5.0.0
   firebase_messaging: ^14.7.8 
-  mailer: ^6.0.1
   image_picker: ^1.0.4
   quickalert: ^1.0.2
   card_slider: ^1.0.5
   cloud_firestore: ^4.13.6
   provider: ^5.0.0
+  carousel_slider: ^4.2.1
   
 
 

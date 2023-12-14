@@ -211,17 +211,18 @@ bool confirmPass(){
 }
 
 Future register()async{
- if(_formkey.currentState!.validate()){
-   if (confirmPass()) {
-      try{
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(), 
-        password: _passwordController.text.trim()
-        ).then((value) => {postDetailsToFirestore(context)});
-      } catch(e){
-        print(e);
-      }
-    }
+    try{
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(), 
+      password: _passwordController.text.trim(),
+      );
+
+     await Future.delayed(const Duration(seconds: 2));
+
+
+      postDetailsToFirestore(context);
+    } catch(e){
+      print(e);
   }
 }
 postDetailsToFirestore(BuildContext context) async {
@@ -251,7 +252,7 @@ postDetailsToFirestore(BuildContext context) async {
           child: ListView(
             scrollDirection: Axis.vertical,
             children: [
-              const SizedBox(height: 20,),
+              SizedBox(height: SizeConfig.blocksVertical!*0.5,),
               Row(children: [
               IconButton(onPressed: () {
                   Navigator.pop(context);
@@ -286,7 +287,7 @@ postDetailsToFirestore(BuildContext context) async {
                             ),],),
                           ],
                         ), 
-                        const SizedBox(height: 35,),
+                            SizedBox(height: SizeConfig.blocksVertical!*5,),
                             Text("Email Address", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4.5,),),
                             SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
@@ -300,7 +301,7 @@ postDetailsToFirestore(BuildContext context) async {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 35,),
+                            SizedBox(height: SizeConfig.blocksVertical!*6,),
                             Text("Password", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4.5),),
                             SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
@@ -324,7 +325,7 @@ postDetailsToFirestore(BuildContext context) async {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 35,),
+                            SizedBox(height: SizeConfig.blocksVertical!*6,),
                             Text("Confirm Password", style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal!*4.5),),
                             SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
@@ -348,7 +349,7 @@ postDetailsToFirestore(BuildContext context) async {
                                 ),
                               ),
                             ),
-                        const SizedBox(height: 70,),
+                        SizedBox(height: SizeConfig.blocksVertical!*6,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -101,7 +101,8 @@ class _BookingsProviderState extends State<BookingsProvider> {
                         ),
                       ),
                     )
-                    : Container(),
+                    : Container(width: SizeConfig.screenWidth!*0.9,
+                        height: SizeConfig.screenHeight!*0.3,),
                   ],
                 ),
                 GestureDetector(

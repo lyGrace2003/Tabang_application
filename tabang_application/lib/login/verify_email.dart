@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server/gmail.dart';
 import 'package:tabang_application/utils/app_style.dart';
 import 'package:tabang_application/login/role_management.dart';
 import 'package:tabang_application/utils/size_config.dart';
@@ -17,6 +15,7 @@ class VerifyEmail extends StatefulWidget {
   @override
   State<VerifyEmail> createState() => _VerifyEmailState();
 }
+final user = FirebaseAuth.instance.currentUser!;
 
 class _VerifyEmailState extends State<VerifyEmail> {
   bool isEmailVerified = false;
@@ -27,7 +26,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   void initState() {
     super.initState();
 
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    isEmailVerified = user.emailVerified;
 
     if(!isEmailVerified){
       sendVerificationEmail();
@@ -58,7 +57,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
     if(isEmailVerified){
       timer?.cancel();
-      sendConfirmationEmail();
     }
   }
 
@@ -67,22 +65,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
     if(user != null){
     setState(() => userEmail = user.email!);
 }
- }
-
-
- Future<void> sendConfirmationEmail() async{
-  try{
-    getuseremail();
-    var message = Message();
-    message.subject = 'Confirmation Email';
-    message.html = '<h4>You have succesfuly been registered!</h4>';
-    message.from = const Address('tabang.app.cop@gmail.com');
-    message.recipients.add(userEmail);
-    var smtpServer = gmailSaslXoauth2('tabang.app.cop@gmail.com', 'huwx sekr dwoe jwyl');
-    send(message, smtpServer);
-  }catch(e){
-    print(e);
-  }
  }
 
   @override

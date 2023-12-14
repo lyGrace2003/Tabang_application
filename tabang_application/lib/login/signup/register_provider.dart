@@ -202,7 +202,7 @@ bool confirmPass(){
           child: ListView(
             scrollDirection: Axis.vertical,
             children: [
-              const SizedBox(height: 20,),
+              SizedBox(height: SizeConfig.blocksVertical!*0.5,),
               Row(children: [
               IconButton(onPressed: () {
                   Navigator.pop(context);
@@ -237,7 +237,7 @@ bool confirmPass(){
                             ),],),
                           ],
                         ), 
-                        const SizedBox(height: 35,),
+                        SizedBox(height: SizeConfig.blocksVertical!*5,),
                             Text("Email Address", style: mRegular.copyWith(color: mOrange,fontSize: SizeConfig.blocksHorizontal!*4.5,),),
                             SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
@@ -251,7 +251,7 @@ bool confirmPass(){
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 35,),
+                            SizedBox(height: SizeConfig.blocksVertical!*6,),
                             Text("Password", style: mRegular.copyWith(color: mOrange,fontSize: SizeConfig.blocksHorizontal!*4.5),),
                             SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
@@ -275,7 +275,7 @@ bool confirmPass(){
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 35,),
+                            SizedBox(height: SizeConfig.blocksVertical!*6,),
                             Text("Confirm Password", style: mRegular.copyWith(color: mOrange,fontSize: SizeConfig.blocksHorizontal!*4.5),),
                             SizedBox(
                               width: SizeConfig.screenWidth!*0.8,
@@ -299,7 +299,7 @@ bool confirmPass(){
                                 ),
                               ),
                             ),
-                        const SizedBox(height: 70,),
+                        SizedBox(height: SizeConfig.blocksVertical!*6,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center ,
                           children: [
@@ -395,15 +395,7 @@ class _ServiceChoiceState extends State<ServiceChoice> {
   }
 }
 
-
-// void postUnverifiedService(data)async{
-//   await Future.delayed(const Duration(seconds: 5));
-//   DocumentReference userDocument = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid);
-//   CollectionReference servicesCollection = userDocument.collection('services');
-//   servicesCollection.add(data);
-//   }
-
-    void postUnverifiedProvider(BuildContext context) async{
+    void postUnverifiedProvider(BuildContext context){
     final user = FirebaseAuth.instance.currentUser;
     CollectionReference ref = FirebaseFirestore.instance.collection('users');
     ref.doc(user!.uid).set({
@@ -415,6 +407,7 @@ class _ServiceChoiceState extends State<ServiceChoice> {
       'verified': '0',
       // 'file', widget.img!
       });
+      sendto(context);
 }
   
 Map<String, dynamic> data = {
@@ -490,7 +483,6 @@ Map<String, dynamic> data = {
                               // postUnverifiedService(data);
                             }
                           }
-                          sendto(context);
                         },
                          child: Text("Submit", style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),)),
                      ],
