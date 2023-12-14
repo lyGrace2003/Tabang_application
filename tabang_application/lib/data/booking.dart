@@ -8,6 +8,10 @@ final String clientID;
 final String client;
 final String rates;
 final String coverUrl;
+final int booked;
+final int stars; 
+final String desc;
+final List<Review> review;
 
 Booking({
   required this.service,
@@ -16,7 +20,11 @@ Booking({
   required this.clientID,
   required this.client,
   required this.rates,
-  required this.coverUrl
+  required this.coverUrl,
+  required this.booked,
+  required this.stars,
+  required this.desc,
+  required this.review,
 });
 }
 

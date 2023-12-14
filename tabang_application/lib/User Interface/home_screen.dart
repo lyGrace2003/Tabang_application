@@ -479,6 +479,7 @@ class MoreInfo extends StatefulWidget {
 }
 
 class _MoreInfoState extends State<MoreInfo> {
+  String dropdownvalue = 'now';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -504,6 +505,7 @@ class _MoreInfoState extends State<MoreInfo> {
                   IconButton(onPressed: () {
                   Navigator.pop(context);
                 }, icon: SvgPicture.asset("assets/white_left_arrow.svg")),
+                IconButton(onPressed: (){}, icon: const Icon(Icons.favorite_border_rounded, color: mWhite, size: 25,))
               ],
             )
           ),
@@ -513,7 +515,7 @@ class _MoreInfoState extends State<MoreInfo> {
             top:300,
             child: Container(
               height: SizeConfig.screenHeight!*0.8,
-              padding: EdgeInsets.only(left: 30, right: 40, top:20),
+              padding: const EdgeInsets.only(left: 30, right: 40, top:20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 color: mWhite ,
@@ -521,7 +523,7 @@ class _MoreInfoState extends State<MoreInfo> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: SizeConfig.blocksVertical!*2,),
+                  SizedBox(height: SizeConfig.blocksVertical!*1,),
                   Text(widget.info.service, style: mBold.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*6, letterSpacing: 2),),
                   SizedBox(height: SizeConfig.blocksVertical!*2,),
                   Row(
@@ -538,12 +540,83 @@ class _MoreInfoState extends State<MoreInfo> {
                       SizedBox(width: SizeConfig.blocksHorizontal!*2,),
                       Text(widget.info.booked.toString(), style: mRegular.copyWith(color: mGrey,fontSize: SizeConfig.blocksHorizontal!*3.5),),
                       SizedBox(width: SizeConfig.blocksHorizontal!*4,),
-                      Text("Reviews", style: mRegular.copyWith(color: mGrey, fontSize: SizeConfig.blocksHorizontal!*3.5),),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> ReviewPage(info:widget.info)));
+                        },
+                        child: Text("Reviews", style: mRegular.copyWith(color: mGrey, fontSize: SizeConfig.blocksHorizontal!*3.5),)
+                        ),
                     ],
                   ),
                   SizedBox(height: SizeConfig.blocksVertical!*2,),
                   Text(widget.info.desc,style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*3.5)),
-
+                  SizedBox(height: SizeConfig.blocksVertical!*2,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                        Text("Time", style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*3.5),),
+                        DropdownButton<String>(
+                        style: const TextStyle( color: mBlack),
+                        underline: Container(height: 2, color: mBlack,),
+                        value: dropdownvalue,
+                        items: const[
+                          DropdownMenuItem<String>(
+                            value: 'now',
+                            child: Text("now")
+                            ),
+                            DropdownMenuItem<String>(
+                            value: '1:00pm',
+                            child: Text("1:00pm")
+                            ),
+                             DropdownMenuItem<String>(
+                            value: '2:00pm',
+                            child: Text("2:00pm")
+                            ),
+                            DropdownMenuItem<String>(
+                            value: '4:00pm',
+                            child: Text("4:00pm")
+                            ),
+                        ], 
+                        onChanged: (String? newValue){
+                          setState(() {
+                            dropdownvalue = newValue!;
+                          });
+                        }
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.blocksHorizontal!*4,),
+                  GestureDetector(
+                    onTap:(){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PayementDetails()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Payment Details", style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*3.5),),
+                        const Icon(Icons.arrow_forward_ios, color: mBlack,size: 15,),
+                      ],
+                      ),
+                  ),
+                 SizedBox(height: SizeConfig.blocksHorizontal!*9,),
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(300, 50), 
+                        backgroundColor: mBrightOrange,
+                        elevation: 0,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(mBorderRadius),),
+                        ),
+                      ),
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                      },
+                       child: Text("Book", style: mBold.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*5),)),
+                   ],
+                 ),
                 ],
               ),
             ),
@@ -554,6 +627,150 @@ class _MoreInfoState extends State<MoreInfo> {
   }
 }
 
+class ReviewPage extends StatelessWidget {
+  BookingOption info;
+  ReviewPage({super.key,
+  required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    List<Review> review = info.review;
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+               padding: const EdgeInsets.only(left: 10, top: 30),
+          height: SizeConfig.screenHeight,
+          width: SizeConfig.screenWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                    IconButton(onPressed: () {
+                    Navigator.pop(context);
+                  }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
+                  SizedBox(width: SizeConfig.blocksHorizontal!*4,),
+                  Text("Reviews", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*6),),
+                ],
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: review.length,
+                  itemBuilder: ((context, index) {
+                    return Container(
+                      height: SizeConfig.screenHeight!*0.2,
+                      width: SizeConfig.screenWidth!*0.7,
+                      margin: const EdgeInsets.only(top: 30),
+                      decoration: BoxDecoration(
+                        color: mWhite,
+                        boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ], 
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(review[index].client, style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*5),),
+                              ...List.generate(review[index].stars,(index) => const Icon(Icons.star, color: mOrange, size: 20)),
+                            ],
+                          ),
+                          SizedBox(height: SizeConfig.blocksHorizontal!*3,),
+                          Text(review[index].review, style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*4),),
+                        ],
+                      ),
+                    );
+                  })))
+            ],
+            ),
+            ),
+          ],
+        ),
+      )
+    );
+  }
+}
+
+class PayementDetails extends StatelessWidget {
+  PayementDetails({super.key});
+
+  bool payment = false;
+  bool payment2 =false; 
+  bool payment3 = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.only(left: 10, top: 30),
+        height: SizeConfig.screenHeight,
+        width: SizeConfig.screenWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                  IconButton(onPressed: () {
+                  Navigator.pop(context);
+                }, icon: SvgPicture.asset("assets/orange_left_arrow.svg")),
+                SizedBox(width: SizeConfig.blocksHorizontal!*4,),
+                Text("Payment Details", style: mRegular.copyWith(color: mBlack, fontSize: SizeConfig.blocksHorizontal!*6),),
+              ],
+            ),
+            SizedBox(height: SizeConfig.blocksHorizontal!*7,),
+            Container(
+              padding: const EdgeInsets.only(left: 30, top: 30),
+              child: Column(
+                children: [
+                Row(
+                children: [
+                  const Icon(Icons.attach_money_outlined, color: mBlack,size: 25,),
+                  SizedBox(width: SizeConfig.blocksHorizontal!*3,),
+                  Text("Cash", style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*4.5),),
+                  SizedBox(width: SizeConfig.blocksHorizontal!*50,),
+                  Checkbox(value: payment, onChanged: (bool? newValue){
+                    payment = newValue!;
+                  })
+                ]),
+                SizedBox(height: SizeConfig.blocksHorizontal!*7,),
+                Row(
+                children: [
+                  const Icon(Icons.paypal, color: mBlack,size: 25,),
+                  SizedBox(width: SizeConfig.blocksHorizontal!*3,),
+                  Text("GCash", style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*4.5),),
+                  SizedBox(width: SizeConfig.blocksHorizontal!*47,),
+                  Checkbox(value: payment2, onChanged: (bool? newValue){
+                    payment2 = newValue!;
+                  })
+                ]),
+                SizedBox(height: SizeConfig.blocksHorizontal!*7,),  
+                Row(
+                children: [
+                  const Icon(Icons.credit_card, color: mBlack,size: 25,),
+                  SizedBox(width: SizeConfig.blocksHorizontal!*3,),
+                  Text("Cards", style: mRegular.copyWith(color: mBlack,fontSize: SizeConfig.blocksHorizontal!*4.5),),
+                  SizedBox(width: SizeConfig.blocksHorizontal!*49,),
+                  Checkbox(value: payment3, onChanged: (bool? newValue){
+                    payment3 = newValue!;
+                  })
+                ]),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 //makes the system crash
 class SearchFilter extends StatefulWidget {
@@ -670,3 +887,5 @@ class _SearchFilterState extends State<SearchFilter> {
     );
   }
 }
+
+

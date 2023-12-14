@@ -18,7 +18,7 @@ class _ScreensState extends State<Screens> {
   int _index = 0;
   final screens =[
     const HomeScreen(),
-    const BookingsScreen(),
+    const BookingScreen(),
     const FavoriteScreen(),
     const ClientProfile(),
   ];

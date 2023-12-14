@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VisibilityProvider extends ChangeNotifier {
-  Map<String, bool> _containerVisibility = {'container1': false, 'container2': true, 'container3': true, "container4":false, 'container5':false};
+  Map<String, bool> _containerVisibility = {'container1': true, 'container2': true, 'container3': true, "container4":false, 'container5':false};
 
   bool getContainerVisibility(String containerKey) {
     return _containerVisibility[containerKey] ?? false;

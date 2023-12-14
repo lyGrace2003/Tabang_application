@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tabang_application/User%20Interface/home_screen.dart';
 import 'package:tabang_application/data/booking.dart';
 import 'package:tabang_application/data/visible.dart';
 import 'package:tabang_application/utils/app_style.dart';
@@ -26,7 +27,11 @@ class _BookingsProviderState extends State<BookingsProvider> {
       clientID: '4Ms8zRFHxxgiOG29FaNupgsSlZ73',
       client: 'rhunnan liao',
       rates: '150',
-      coverUrl: 'assets/Video-Editing.jpg')
+      coverUrl: 'assets/Video-Editing.jpg',
+      booked: 0,
+      review: [],
+      desc: '',
+      stars: 0)
   ];
 
   List<Booking> history =[
@@ -37,7 +42,11 @@ class _BookingsProviderState extends State<BookingsProvider> {
       clientID: '4Ms8zRFHxxgiOG29FaNupgsSlZ73',
       client: 'rhunnan liao',
       rates: '200',
-      coverUrl: 'assets/tutoring.jpg'),
+      coverUrl: 'assets/tutoring.jpg',
+      booked: 0,
+      review: [],
+      desc: '',
+      stars: 0),
       Booking(
       service: 'Video Editing',
       providerID: 's4yHnmurmtRQXnv7bI0vsFq8GCg2',
@@ -45,7 +54,11 @@ class _BookingsProviderState extends State<BookingsProvider> {
       clientID: '4Ms8zRFHxxgiOG29FaNupgsSlZ73',
       client: 'Zeirah Gerat',
       rates: '200',
-      coverUrl: 'assets/Video-Editing.jpg')
+      coverUrl: 'assets/Video-Editing.jpg',
+      booked: 0,
+      review: [],
+      desc: '',
+      stars: 0)
   ];
 
  
@@ -57,7 +70,6 @@ class _BookingsProviderState extends State<BookingsProvider> {
     return Scaffold(
       body:ListView(
         children: [ Container(
-          padding: const EdgeInsets.all(20),
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight,
             child: Column(
@@ -74,8 +86,7 @@ class _BookingsProviderState extends State<BookingsProvider> {
                      ?  GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>CurrInfo(curr: curr))),
                       child: Container(
-                        padding: const EdgeInsets.only(left:30),
-                        width: SizeConfig.screenWidth!*0.9,
+                        width: SizeConfig.screenWidth!*1,
                         height: SizeConfig.screenHeight!*0.3,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -89,9 +100,8 @@ class _BookingsProviderState extends State<BookingsProvider> {
                             Row(
                               children: [
                                 Text(curr[0].client, style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
-                                SizedBox(width: SizeConfig.blocksHorizontal!*30,),
                                 Text(curr[0].rates, style: mRegular.copyWith(color: mWhite, fontSize: SizeConfig.blocksHorizontal!*4),),
-                                SizedBox(width: SizeConfig.blocksHorizontal!*2,),
+                                SizedBox(width: SizeConfig.blocksHorizontal!*1,),
                                 IconButton(
                                   onPressed: (){},
                                   icon: const Icon(Icons.info_rounded, size: 20.0,color: mWhite,))
@@ -156,9 +166,9 @@ class History extends StatelessWidget {
             if (provider.getContainerVisibility('container4') && index == 0) {
               // This is the fixed container
               return Container(
-                margin: EdgeInsets.only(right: 20, left: 1), // Adjust the margin as needed
+                margin: EdgeInsets.only(right: 20, left: 10),
                 width: SizeConfig.screenWidth! * 0.88,
-                height: SizeConfig.screenHeight! * 0.2,
+                height: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: const DecorationImage(image: AssetImage("assets/Video-Editing.jpg"), fit: BoxFit.cover),
@@ -167,91 +177,49 @@ class History extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      "Video Editing",
-                      style: mBold.copyWith(
-                        color: mWhite,
-                        fontSize: SizeConfig.blocksHorizontal! * 6,
-                      ),
-                    ),
+                    Text("Video Editing",style: mBold.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal! * 6,),),
                     Row(
                       children: [
-                        Text(
-                          "rhunnan liao",
-                          style: mRegular.copyWith(
-                            color: mWhite,
-                            fontSize: SizeConfig.blocksHorizontal! * 4,
-                          ),
-                        ),
+                        Text("rhunnan liao",style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal! * 4,),),
                         SizedBox(width: SizeConfig.blocksHorizontal! * 30),
-                        Text(
-                          "150",
-                          style: mRegular.copyWith(
-                            color: mWhite,
-                            fontSize: SizeConfig.blocksHorizontal! * 4,
-                          ),
-                        ),
-                        SizedBox(width: SizeConfig.blocksHorizontal! * 2),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.info_rounded, size: 20.0, color: mWhite),
-                        ),
+                        Text("150",style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal! * 4,),),
                       ],
                     ),
                   ],
                 ),
               );
             } else {
-              // This is a dynamically generated item
               Booking prev = history[provider.getContainerVisibility('container4') ? index - 1 : index];
-              return Container(
-                margin: EdgeInsets.only(left: index == 0 ? 0 : 20),
-                padding: const EdgeInsets.only(left: 30),
-                width: SizeConfig.screenWidth! * 0.9,
-                height: SizeConfig.screenHeight! * 0.2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    image: AssetImage(prev.coverUrl),
-                    fit: BoxFit.cover,
+              return GestureDetector(
+                onTap: () {
+                },
+                child: Container(
+                  margin: EdgeInsets.only(left: index == 0 ? 0 : 20),
+                  padding: const EdgeInsets.only(left: 30),
+                  width: SizeConfig.screenWidth! * 0.9,
+                  height: SizeConfig.screenHeight! * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    image: DecorationImage(
+                      image: AssetImage(prev.coverUrl),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      prev.service,
-                      style: mBold.copyWith(
-                        color: mWhite,
-                        fontSize: SizeConfig.blocksHorizontal! * 6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(prev.service,style: mBold.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal! * 6,),),
+                      Row(
+                        children: [
+                          Text(prev.client,style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal! * 4,),),
+                          SizedBox(width: SizeConfig.blocksHorizontal! * 30),
+                          Text(prev.rates,style: mRegular.copyWith(color: mWhite,fontSize: SizeConfig.blocksHorizontal! * 4,),),
+                          SizedBox(width: SizeConfig.blocksHorizontal! * 2),
+                        ],
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          prev.client,
-                          style: mRegular.copyWith(
-                            color: mWhite,
-                            fontSize: SizeConfig.blocksHorizontal! * 4,
-                          ),
-                        ),
-                        SizedBox(width: SizeConfig.blocksHorizontal! * 30),
-                        Text(
-                          prev.rates,
-                          style: mRegular.copyWith(
-                            color: mWhite,
-                            fontSize: SizeConfig.blocksHorizontal! * 4,
-                          ),
-                        ),
-                        SizedBox(width: SizeConfig.blocksHorizontal! * 2),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.info_rounded, size: 20.0, color: mWhite),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }
